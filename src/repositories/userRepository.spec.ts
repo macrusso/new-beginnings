@@ -50,4 +50,14 @@ describe("User Repository", () => {
     expect(createMock).toBeCalledWith(userToUpdate, { returnValues: "UPDATED_NEW" });
     expect(result).toStrictEqual(userWithNewAddress);
   });
+
+  it("removes user successfully", async () => {
+    const createMock = jest.spyOn(UserEntity, "delete");
+    createMock.mockResolvedValue({});
+
+    const result = await userRepo.delete("some_id");
+
+    expect(createMock).toBeCalledWith({ id: "some_id" });
+    expect(result).toEqual(true);
+  });
 });
