@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: NewBeginnings
+
+Parameters:
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 512
+
+Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    MethodSettings:
+      - LoggingLevel: INFO
+        ResourcePath: "/*"
+        HttpMethod: "*"
+    Properties:
+      StageName: test
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: ID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: ID
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
