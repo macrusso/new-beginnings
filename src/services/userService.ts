@@ -1,8 +1,9 @@
 import { User } from "../models/types";
+import * as userRepo from "../repositories/userRepository";
 
 export const add = async (user: User): Promise<User> => {
   const userId = "some_id";
-  const paymentToStore: User = {
+  const userToStore: User = {
     id: userId,
     name: user.name,
     dob: user.dob,
@@ -15,5 +16,5 @@ export const add = async (user: User): Promise<User> => {
     },
   };
 
-  return paymentToStore;
+  return await userRepo.add(userToStore);
 };

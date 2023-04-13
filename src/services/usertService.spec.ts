@@ -1,5 +1,6 @@
 import { User } from "../models/types";
 import * as userService from "./userService";
+import * as userRepo from "../repositories/userRepository";
 
 describe("User Service", () => {
   it("Adds id before storing in the db", async () => {
@@ -14,6 +15,9 @@ describe("User Service", () => {
         postcode: "LL10 3LL",
       },
     };
+    const createMock = jest.spyOn(userRepo, "add");
+    createMock.mockResolvedValue({ ...userNoId, id: "some_id" });
+
     const result = await userService.add(userNoId);
 
     expect(result).toHaveProperty("id");
