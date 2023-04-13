@@ -1,4 +1,4 @@
-import { User } from "../models/types";
+import { User, UserUpdate } from "../models/types";
 import * as userRepo from "../repositories/userRepository";
 
 export const add = async (user: User): Promise<User> => {
@@ -17,4 +17,8 @@ export const add = async (user: User): Promise<User> => {
   };
 
   return await userRepo.add(userToStore);
+};
+
+export const update = async (user: UserUpdate): Promise<User> => {
+  return await userRepo.update(user);
 };
