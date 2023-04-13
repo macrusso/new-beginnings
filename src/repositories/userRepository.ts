@@ -47,3 +47,21 @@ export const remove = async (id: string): Promise<Boolean> => {
 
   return true;
 };
+
+export const getOne = async (id: string): Promise<User> => {
+  const { Item } = await UserEntity.get({
+    id,
+  });
+
+  if (!Item) {
+    throw new Error("No user");
+  } else {
+    return {
+      id: Item.id,
+      name: Item.name,
+      dob: Item.dob,
+      phone: Item.phone,
+      address: Item.address,
+    };
+  }
+};
