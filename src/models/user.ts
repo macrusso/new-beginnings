@@ -16,10 +16,10 @@ export const UserEntity = new Entity({
   name: "Payment",
   attributes: {
     id: { partitionKey: true },
-    name: { type: "string" },
-    dob: { type: "string" },
-    phone: { type: "string" },
-    address: { type: "map" },
+    name: { type: "string", required: true },
+    dob: { type: "string", required: true },
+    phone: { type: "string", required: true },
+    address: { type: "map", required: true },
   },
   table: UsersTable,
 } as const);
