@@ -51,6 +51,15 @@ describe("User Service", () => {
 
     const result = await userService.update(userToUpdate);
 
-    expect(result).toHaveProperty("id");
+    expect(result).toStrictEqual(userWithNewAddress);
+  });
+
+  it("Removes user", async () => {
+    const createMock = jest.spyOn(userRepo, "remove");
+    createMock.mockResolvedValue(true);
+
+    const result = await userService.remove("some_id");
+
+    expect(result).toEqual(true);
   });
 });
