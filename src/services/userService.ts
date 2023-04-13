@@ -22,3 +22,7 @@ export const add = async (user: User): Promise<User> => {
 export const update = async (user: UserUpdate): Promise<User> => {
   return await userRepo.update(user);
 };
+
+export const remove = async (id: string): Promise<Boolean> => {
+  return await userRepo.remove(id);
+};
