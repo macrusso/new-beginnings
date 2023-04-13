@@ -60,4 +60,14 @@ describe("User Repository", () => {
     expect(createMock).toBeCalledWith({ id: "some_id" });
     expect(result).toEqual(true);
   });
+
+  it("gets user successfully", async () => {
+    const createMock = jest.spyOn(UserEntity, "get");
+    createMock.mockResolvedValue({ Item: { ...user } });
+
+    const result = await userRepo.getOne("some_id");
+
+    expect(createMock).toBeCalledWith({ id: "some_id" });
+    expect(result).toStrictEqual(user);
+  });
 });
