@@ -39,3 +39,11 @@ export const update = async (item: UserUpdate): Promise<User> => {
     };
   }
 };
+
+export const remove = async (id: string): Promise<Boolean> => {
+  await UserEntity.delete({
+    id,
+  });
+
+  return true;
+};

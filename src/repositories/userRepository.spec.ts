@@ -55,7 +55,7 @@ describe("User Repository", () => {
     const createMock = jest.spyOn(UserEntity, "delete");
     createMock.mockResolvedValue({});
 
-    const result = await userRepo.delete("some_id");
+    const result = await userRepo.remove("some_id");
 
     expect(createMock).toBeCalledWith({ id: "some_id" });
     expect(result).toEqual(true);
