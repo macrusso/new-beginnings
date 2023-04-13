@@ -26,3 +26,7 @@ export const update = async (user: UserUpdate): Promise<User> => {
 export const remove = async (id: string): Promise<Boolean> => {
   return await userRepo.remove(id);
 };
+
+export const getOne = async (id: string): Promise<User> => {
+  return await userRepo.getOne(id);
+};
