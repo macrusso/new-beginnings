@@ -1,7 +1,8 @@
 import { User } from "../models/types";
+import { UserEntity } from "../models/user";
 
 export const add = async (item: User): Promise<User> => {
-  return {
+  await UserEntity.put({
     id: item.id,
     name: item.name,
     dob: item.dob,
@@ -12,5 +13,7 @@ export const add = async (item: User): Promise<User> => {
       city: item.address.city,
       postcode: item.address.postcode,
     },
-  };
+  });
+
+  return item;
 };

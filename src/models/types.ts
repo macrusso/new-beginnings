@@ -1,4 +1,4 @@
-export interface UserRequest {
+export interface User {
   id?: string;
   name: string;
   dob: string;
@@ -8,7 +8,7 @@ export interface UserRequest {
 
 export interface Address {
   street1: string;
-  street2: string;
+  street2?: string;
   city: string;
   postcode: string;
 }

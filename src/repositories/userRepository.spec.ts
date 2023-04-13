@@ -1,4 +1,5 @@
 import { User } from "../models/types";
+import { UserEntity } from "../models/user";
 import * as userRepo from "./userRepository";
 
 describe("User Repository", () => {
@@ -16,7 +17,12 @@ describe("User Repository", () => {
       },
     };
 
+    const createMock = jest.spyOn(UserEntity, "put");
+    createMock.mockResolvedValue({});
+
     const result = await userRepo.add(user);
+
+    expect(createMock).toBeCalledWith(user);
     expect(result).toStrictEqual(user);
   });
 });
