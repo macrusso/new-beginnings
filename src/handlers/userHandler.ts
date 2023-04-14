@@ -105,3 +105,35 @@ export const removeUser = async (event: APIGatewayProxyEvent): Promise<Response>
     }
   }
 };
+
+export const getOneUser = async (event: APIGatewayProxyEvent): Promise<Response> => {
+  try {
+    if (event.httpMethod !== "GET") {
+      throw new Error(`Only accepts GET method, you tried: ${event.httpMethod} method.`);
+    }
+
+    const body = JSON.parse(event.body || "{}") as { id: string };
+    if (Object.keys(body).length === 0) {
+      throw new Error(`Empty body`);
+    }
+
+    const result = await userService.getOne(body.id);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result),
+    };
+  } catch (error: any) {
+    if (error.statusCode) {
+      return {
+        statusCode: error.statusCode,
+        body: error.message,
+      };
+    } else {
+      return {
+        statusCode: 500,
+        body: error.message,
+      };
+    }
+  }
+};

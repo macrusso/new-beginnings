@@ -243,7 +243,7 @@ describe("App Handlers", () => {
 
       expect(result).toStrictEqual({
         statusCode: 200,
-        body: JSON.stringify(true),
+        body: JSON.stringify({ ...user, id: "some_id" }),
       });
     });
 
@@ -257,7 +257,7 @@ describe("App Handlers", () => {
 
       expect(result).toStrictEqual({
         statusCode: 500,
-        body: `Only accepts GET method, you tried: GET method.`,
+        body: `Only accepts GET method, you tried: PUT method.`,
       });
     });
 
