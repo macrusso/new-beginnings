@@ -18,7 +18,6 @@ describe("App Handlers", () => {
   describe("add user", () => {
     it("Returns stringified results on add user", async () => {
       const id = "some_id";
-
       const payload = {
         body: JSON.stringify(user),
         httpMethod: "POST",
@@ -62,6 +61,26 @@ describe("App Handlers", () => {
       expect(result).toStrictEqual({
         statusCode: 500,
         body: `Empty payment body`,
+      });
+    });
+
+    it("Throws when service errors out", async () => {
+      const payload = {
+        body: JSON.stringify(user),
+        httpMethod: "POST",
+      } as any as APIGatewayProxyEvent;
+
+      const createMock = jest.spyOn(userService, "add");
+      createMock.mockRejectedValue({
+        statusCode: 400,
+        message: "Bad Request",
+      });
+
+      const result = await addUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 400,
+        body: `Bad Request`,
       });
     });
   });
