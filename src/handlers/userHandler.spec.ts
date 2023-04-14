@@ -4,7 +4,8 @@ import { User, UserUpdate } from "../models/types";
 import * as userService from "../services/userService";
 
 describe("App Handlers", () => {
-  const user: User = {
+  const id = "some_id";
+  const userNoId: User = {
     name: "john doe",
     dob: "01-01-1900",
     phone: "+447000000000",
@@ -15,31 +16,39 @@ describe("App Handlers", () => {
       postcode: "LL10 3LL",
     },
   };
+  const userWithId = {
+    ...userNoId,
+    id,
+  };
+  const userToUpdate: UserUpdate = {
+    id: "some_id",
+    address: {
+      street1: "Flat 1, New Building",
+      street2: "10 New Street",
+      city: "Oxford",
+      postcode: "OX10 3OX",
+    },
+  };
   describe("add user", () => {
     it("Returns stringified results on add user", async () => {
-      const id = "some_id";
       const payload = {
-        body: JSON.stringify(user),
+        body: JSON.stringify(userNoId),
         httpMethod: "POST",
       } as any as APIGatewayProxyEvent;
 
       const createMock = jest.spyOn(userService, "add");
-      createMock.mockResolvedValue({ ...user, id });
+      createMock.mockResolvedValue(userWithId);
 
       const result = await addUser(payload);
 
       expect(result).toStrictEqual({
         statusCode: 200,
-        body: JSON.stringify({
-          ...user,
-          id,
-        }),
+        body: JSON.stringify(userWithId),
       });
     });
 
     it("Throws when wrong httpMethod is used", async () => {
       const payload = {
-        body: JSON.stringify(user),
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
 
@@ -66,7 +75,7 @@ describe("App Handlers", () => {
 
     it("Throws when service errors out", async () => {
       const payload = {
-        body: JSON.stringify(user),
+        body: JSON.stringify(userNoId),
         httpMethod: "POST",
       } as any as APIGatewayProxyEvent;
 
@@ -86,15 +95,6 @@ describe("App Handlers", () => {
   });
 
   describe("update user", () => {
-    const userToUpdate: UserUpdate = {
-      id: "some_id",
-      address: {
-        street1: "Flat 1, New Building",
-        street2: "10 New Street",
-        city: "Oxford",
-        postcode: "OX10 3OX",
-      },
-    };
     it("Returns stringified results on update user", async () => {
       const payload = {
         body: JSON.stringify(userToUpdate),
@@ -102,14 +102,14 @@ describe("App Handlers", () => {
       } as any as APIGatewayProxyEvent;
 
       const createMock = jest.spyOn(userService, "update");
-      createMock.mockResolvedValue({ ...user, ...userToUpdate });
+      createMock.mockResolvedValue({ ...userNoId, ...userToUpdate });
 
       const result = await updateUser(payload);
 
       expect(result).toStrictEqual({
         statusCode: 200,
         body: JSON.stringify({
-          ...user,
+          ...userNoId,
           ...userToUpdate,
         }),
       });
@@ -117,7 +117,6 @@ describe("App Handlers", () => {
 
     it("Throws when wrong httpMethod is used", async () => {
       const payload = {
-        body: JSON.stringify(user),
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
 
@@ -144,7 +143,7 @@ describe("App Handlers", () => {
 
     it("Throws when service errors out", async () => {
       const payload = {
-        body: JSON.stringify(user),
+        body: JSON.stringify(userToUpdate),
         httpMethod: "PUT",
       } as any as APIGatewayProxyEvent;
 
@@ -166,7 +165,7 @@ describe("App Handlers", () => {
   describe("remove user", () => {
     it("Returns stringified confirmation on remove user", async () => {
       const payload = {
-        body: JSON.stringify({ id: "some_id" }),
+        body: JSON.stringify({ id }),
         httpMethod: "DELETE",
       } as any as APIGatewayProxyEvent;
 
@@ -183,7 +182,6 @@ describe("App Handlers", () => {
 
     it("Throws when wrong httpMethod is used", async () => {
       const payload = {
-        body: JSON.stringify(user),
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
 
@@ -210,17 +208,17 @@ describe("App Handlers", () => {
 
     it("Throws when service errors out", async () => {
       const payload = {
-        body: JSON.stringify(user),
-        httpMethod: "PUT",
+        body: JSON.stringify({ id }),
+        httpMethod: "DELETE",
       } as any as APIGatewayProxyEvent;
 
-      const createMock = jest.spyOn(userService, "update");
+      const createMock = jest.spyOn(userService, "remove");
       createMock.mockRejectedValue({
         statusCode: 400,
         message: "Bad Request",
       });
 
-      const result = await updateUser(payload);
+      const result = await removeUser(payload);
 
       expect(result).toStrictEqual({
         statusCode: 400,
@@ -232,24 +230,23 @@ describe("App Handlers", () => {
   describe("get one user", () => {
     it("Returns stringified result on get one user", async () => {
       const payload = {
-        body: JSON.stringify({ id: "some_id" }),
+        body: JSON.stringify({ id }),
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
 
       const createMock = jest.spyOn(userService, "getOne");
-      createMock.mockResolvedValue({ ...user, id: "some_id" });
+      createMock.mockResolvedValue(userWithId);
 
       const result = await getOneUser(payload);
 
       expect(result).toStrictEqual({
         statusCode: 200,
-        body: JSON.stringify({ ...user, id: "some_id" }),
+        body: JSON.stringify(userWithId),
       });
     });
 
     it("Throws when wrong httpMethod is used", async () => {
       const payload = {
-        body: JSON.stringify(user),
         httpMethod: "PUT",
       } as any as APIGatewayProxyEvent;
 
@@ -276,7 +273,7 @@ describe("App Handlers", () => {
 
     it("Throws when service errors out", async () => {
       const payload = {
-        body: JSON.stringify(user),
+        body: JSON.stringify({ id }),
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
 
