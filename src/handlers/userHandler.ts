@@ -25,9 +25,16 @@ export const addUser = async (event: APIGatewayProxyEvent): Promise<Response> =>
       body: JSON.stringify(result),
     };
   } catch (error: any) {
-    return {
-      statusCode: 500,
-      body: error.message,
-    };
+    if (error.statusCode) {
+      return {
+        statusCode: error.statusCode,
+        body: error.message,
+      };
+    } else {
+      return {
+        statusCode: 500,
+        body: error.message,
+      };
+    }
   }
 };
