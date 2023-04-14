@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { addUser } from "./userHandler";
+import { addUser, updateUser } from "./userHandler";
 import { User, UserUpdate } from "../models/types";
 import * as userService from "../services/userService";
 
@@ -60,7 +60,7 @@ describe("App Handlers", () => {
 
       expect(result).toStrictEqual({
         statusCode: 500,
-        body: `Empty payment body`,
+        body: `Empty body`,
       });
     });
 
@@ -125,7 +125,7 @@ describe("App Handlers", () => {
 
       expect(result).toStrictEqual({
         statusCode: 500,
-        body: `Only accepts POST method, you tried: GET method.`,
+        body: `Only accepts PUT method, you tried: GET method.`,
       });
     });
 
@@ -138,7 +138,7 @@ describe("App Handlers", () => {
 
       expect(result).toStrictEqual({
         statusCode: 500,
-        body: `Empty payment body`,
+        body: `Empty body`,
       });
     });
 

@@ -15,10 +15,45 @@ export const addUser = async (event: APIGatewayProxyEvent): Promise<Response> =>
 
     const body = JSON.parse(event.body || "{}") as User;
     if (Object.keys(body).length === 0) {
-      throw new Error(`Empty payment body`);
+      throw new Error(`Empty body`);
     }
 
     const result = await userService.add(body);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result),
+    };
+  } catch (error: any) {
+    if (error.statusCode) {
+      return {
+        statusCode: error.statusCode,
+        body: error.message,
+      };
+    } else {
+      return {
+        statusCode: 500,
+        body: error.message,
+      };
+    }
+  }
+};
+
+export const updateUser = async (event: APIGatewayProxyEvent): Promise<Response> => {
+  try {
+    if (event.httpMethod !== "PUT") {
+      throw new Error(`Only accepts PUT method, you tried: ${event.httpMethod} method.`);
+    }
+
+    const body = JSON.parse(event.body || "{}") as User;
+    if (Object.keys(body).length === 0) {
+      throw new Error(`Empty body`);
+    }
+
+    const result = await userService.update({
+      ...body,
+      id: body.id as string,
+    });
 
     return {
       statusCode: 200,
