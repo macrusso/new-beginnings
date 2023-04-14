@@ -51,5 +51,18 @@ describe("App Handlers", () => {
         body: `Only accepts POST method, you tried: GET method.`,
       });
     });
+
+    it("Throws when empty no body is provided", async () => {
+      const payload = {
+        httpMethod: "POST",
+      } as any as APIGatewayProxyEvent;
+
+      const result = await addUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 500,
+        body: `Empty payment body`,
+      });
+    });
   });
 });
