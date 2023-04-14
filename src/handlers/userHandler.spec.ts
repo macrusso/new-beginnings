@@ -161,6 +161,7 @@ describe("App Handlers", () => {
       const payload = {
         body: JSON.stringify(userToUpdate),
         httpMethod: "PUT",
+        pathParameters: { id },
       } as any as APIGatewayProxyEvent;
 
       const createMock = jest.spyOn(userService, "update");

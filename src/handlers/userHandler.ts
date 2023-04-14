@@ -50,6 +50,11 @@ export const updateUser = async (event: APIGatewayProxyEvent): Promise<Response>
       throw new Error(`Empty body`);
     }
 
+    const id = event.pathParameters?.id || "";
+    if (!id) {
+      throw new Error(`Missing ID`);
+    }
+
     const result = await userService.update({
       ...body,
       id: body.id as string,
@@ -80,12 +85,12 @@ export const removeUser = async (event: APIGatewayProxyEvent): Promise<Response>
       throw new Error(`Only accepts DELETE method, you tried: ${event.httpMethod} method.`);
     }
 
-    const body = JSON.parse(event.body || "{}") as { id: string };
-    if (Object.keys(body).length === 0) {
-      throw new Error(`Empty body`);
+    const id = event.pathParameters?.id || "";
+    if (!id) {
+      throw new Error(`Missing ID`);
     }
 
-    const result = await userService.remove(body.id);
+    const result = await userService.remove(id);
 
     return {
       statusCode: 200,
@@ -112,12 +117,12 @@ export const getOneUser = async (event: APIGatewayProxyEvent): Promise<Response>
       throw new Error(`Only accepts GET method, you tried: ${event.httpMethod} method.`);
     }
 
-    const body = JSON.parse(event.body || "{}") as { id: string };
-    if (Object.keys(body).length === 0) {
-      throw new Error(`Empty body`);
+    const id = event.pathParameters?.id || "";
+    if (!id) {
+      throw new Error(`Missing ID`);
     }
 
-    const result = await userService.getOne(body.id);
+    const result = await userService.getOne(id);
 
     return {
       statusCode: 200,
