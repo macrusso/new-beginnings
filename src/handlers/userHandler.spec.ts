@@ -162,4 +162,70 @@ describe("App Handlers", () => {
       });
     });
   });
+
+  describe("remove user", () => {
+    it("Returns stringified confirmation on remove user", async () => {
+      const payload = {
+        body: JSON.stringify({ id: "some_id" }),
+        httpMethod: "DELETE",
+      } as any as APIGatewayProxyEvent;
+
+      const createMock = jest.spyOn(userService, "remove");
+      createMock.mockResolvedValue(true);
+
+      const result = await removeUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 200,
+        body: JSON.stringify(true),
+      });
+    });
+
+    it("Throws when wrong httpMethod is used", async () => {
+      const payload = {
+        body: JSON.stringify(user),
+        httpMethod: "GET",
+      } as any as APIGatewayProxyEvent;
+
+      const result = await removeUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 500,
+        body: `Only accepts DELETE method, you tried: GET method.`,
+      });
+    });
+
+    it("Throws when empty no body is provided", async () => {
+      const payload = {
+        httpMethod: "DELETE",
+      } as any as APIGatewayProxyEvent;
+
+      const result = await removeUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 500,
+        body: `Empty body`,
+      });
+    });
+
+    it("Throws when service errors out", async () => {
+      const payload = {
+        body: JSON.stringify(user),
+        httpMethod: "PUT",
+      } as any as APIGatewayProxyEvent;
+
+      const createMock = jest.spyOn(userService, "update");
+      createMock.mockRejectedValue({
+        statusCode: 400,
+        message: "Bad Request",
+      });
+
+      const result = await updateUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 400,
+        body: `Bad Request`,
+      });
+    });
+  });
 });
