@@ -36,6 +36,14 @@ npm run build
 sam build
 ```
 
+- install packages for compiled JS
+
+```bash
+cd dist
+npm i
+cd ..
+```
+
 - run AWS SAM application locally
 
 ```bash
