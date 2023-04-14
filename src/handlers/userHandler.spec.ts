@@ -99,6 +99,7 @@ describe("App Handlers", () => {
       const payload = {
         body: JSON.stringify(userToUpdate),
         httpMethod: "PUT",
+        pathParameters: { id },
       } as any as APIGatewayProxyEvent;
 
       const createMock = jest.spyOn(userService, "update");
@@ -131,6 +132,7 @@ describe("App Handlers", () => {
     it("Throws when empty no body is provided", async () => {
       const payload = {
         httpMethod: "PUT",
+        pathParameters: { id },
       } as any as APIGatewayProxyEvent;
 
       const result = await updateUser(payload);
@@ -138,6 +140,20 @@ describe("App Handlers", () => {
       expect(result).toStrictEqual({
         statusCode: 500,
         body: `Empty body`,
+      });
+    });
+
+    it("Throws when no id in url params", async () => {
+      const payload = {
+        body: JSON.stringify(userToUpdate),
+        httpMethod: "PUT",
+      } as any as APIGatewayProxyEvent;
+
+      const result = await updateUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 500,
+        body: `Missing ID`,
       });
     });
 
@@ -165,7 +181,7 @@ describe("App Handlers", () => {
   describe("remove user", () => {
     it("Returns stringified confirmation on remove user", async () => {
       const payload = {
-        body: JSON.stringify({ id }),
+        pathParameters: { id },
         httpMethod: "DELETE",
       } as any as APIGatewayProxyEvent;
 
@@ -193,7 +209,7 @@ describe("App Handlers", () => {
       });
     });
 
-    it("Throws when empty no body is provided", async () => {
+    it("Throws when no id in url params", async () => {
       const payload = {
         httpMethod: "DELETE",
       } as any as APIGatewayProxyEvent;
@@ -202,13 +218,13 @@ describe("App Handlers", () => {
 
       expect(result).toStrictEqual({
         statusCode: 500,
-        body: `Empty body`,
+        body: `Missing ID`,
       });
     });
 
     it("Throws when service errors out", async () => {
       const payload = {
-        body: JSON.stringify({ id }),
+        pathParameters: { id },
         httpMethod: "DELETE",
       } as any as APIGatewayProxyEvent;
 
@@ -230,7 +246,7 @@ describe("App Handlers", () => {
   describe("get one user", () => {
     it("Returns stringified result on get one user", async () => {
       const payload = {
-        body: JSON.stringify({ id }),
+        pathParameters: { id },
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
 
@@ -258,7 +274,7 @@ describe("App Handlers", () => {
       });
     });
 
-    it("Throws when empty no body is provided", async () => {
+    it("Throws when no id in url params", async () => {
       const payload = {
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
@@ -267,13 +283,13 @@ describe("App Handlers", () => {
 
       expect(result).toStrictEqual({
         statusCode: 500,
-        body: `Empty body`,
+        body: `Missing ID`,
       });
     });
 
     it("Throws when service errors out", async () => {
       const payload = {
-        body: JSON.stringify({ id }),
+        pathParameters: { id },
         httpMethod: "GET",
       } as any as APIGatewayProxyEvent;
 
