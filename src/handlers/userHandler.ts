@@ -14,6 +14,9 @@ export const addUser = async (event: APIGatewayProxyEvent): Promise<Response> =>
     }
 
     const body = JSON.parse(event.body || "{}") as User;
+    if (Object.keys(body).length === 0) {
+      throw new Error(`Empty payment body`);
+    }
 
     const result = await userService.add(body);
 
