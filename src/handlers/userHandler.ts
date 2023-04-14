@@ -7,7 +7,7 @@ interface Response {
   body: string;
 }
 
-export const postPayment = async (event: APIGatewayProxyEvent): Promise<Response> => {
+export const addUser = async (event: APIGatewayProxyEvent): Promise<Response> => {
   const body = JSON.parse(event.body || "{}") as User;
 
   const result = await userService.add(body);

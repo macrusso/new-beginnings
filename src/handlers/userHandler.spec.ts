@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { addUser } from "./userHandler";
 import { User } from "../models/types";
+import * as userService from "../services/userService";
 
 describe("App Handlers", () => {
   describe("add user", () => {
@@ -22,6 +23,9 @@ describe("App Handlers", () => {
         body: JSON.stringify(user),
         httpMethod: "POST",
       } as any as APIGatewayProxyEvent;
+
+      const createMock = jest.spyOn(userService, "add");
+      createMock.mockResolvedValue({ ...user, id });
 
       const result = await addUser(payload);
 
