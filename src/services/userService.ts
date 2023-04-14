@@ -2,6 +2,9 @@ import { User, UserUpdate } from "../models/types";
 import * as userRepo from "../repositories/userRepository";
 
 export const add = async (user: User): Promise<User> => {
+  // assuming we use another service to get userID
+  // we'd need to have another adapter to that service
+  // and call it here to get new id and pass it with the user to DB
   const userId = "some_id";
   const userToStore: User = {
     id: userId,
