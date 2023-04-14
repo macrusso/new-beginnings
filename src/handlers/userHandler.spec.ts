@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { addUser, updateUser, removeUser } from "./userHandler";
+import { addUser, updateUser, removeUser, getOneUser } from "./userHandler";
 import { User, UserUpdate } from "../models/types";
 import * as userService from "../services/userService";
 
@@ -221,6 +221,72 @@ describe("App Handlers", () => {
       });
 
       const result = await updateUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 400,
+        body: `Bad Request`,
+      });
+    });
+  });
+
+  describe("get one user", () => {
+    it("Returns stringified result on get one user", async () => {
+      const payload = {
+        body: JSON.stringify({ id: "some_id" }),
+        httpMethod: "GET",
+      } as any as APIGatewayProxyEvent;
+
+      const createMock = jest.spyOn(userService, "getOne");
+      createMock.mockResolvedValue({ ...user, id: "some_id" });
+
+      const result = await getOneUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 200,
+        body: JSON.stringify(true),
+      });
+    });
+
+    it("Throws when wrong httpMethod is used", async () => {
+      const payload = {
+        body: JSON.stringify(user),
+        httpMethod: "PUT",
+      } as any as APIGatewayProxyEvent;
+
+      const result = await getOneUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 500,
+        body: `Only accepts GET method, you tried: GET method.`,
+      });
+    });
+
+    it("Throws when empty no body is provided", async () => {
+      const payload = {
+        httpMethod: "GET",
+      } as any as APIGatewayProxyEvent;
+
+      const result = await getOneUser(payload);
+
+      expect(result).toStrictEqual({
+        statusCode: 500,
+        body: `Empty body`,
+      });
+    });
+
+    it("Throws when service errors out", async () => {
+      const payload = {
+        body: JSON.stringify(user),
+        httpMethod: "GET",
+      } as any as APIGatewayProxyEvent;
+
+      const createMock = jest.spyOn(userService, "getOne");
+      createMock.mockRejectedValue({
+        statusCode: 400,
+        message: "Bad Request",
+      });
+
+      const result = await getOneUser(payload);
 
       expect(result).toStrictEqual({
         statusCode: 400,
