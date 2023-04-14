@@ -33,3 +33,79 @@ Resources:
         - AttributeName: ID
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
+
+  AddUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: handlers/userHandler.addUser
+      Runtime: nodejs18.x
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref UsersTable
+      Environment:
+        Variables:
+          DB_TABLE: !Ref UsersTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+
+  UpdateUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: handlers/userHandler.updateUser
+      Runtime: nodejs18.x
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref UsersTable
+      Environment:
+        Variables:
+          DB_TABLE: !Ref UsersTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{id}
+            Method: PUT
+
+  RemoveUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: handlers/userHandler.removeUser
+      Runtime: nodejs18.x
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref UsersTable
+      Environment:
+        Variables:
+          DB_TABLE: !Ref UsersTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{id}
+            Method: DELETE
+
+  GetOneUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: handlers/userHandler.getOneUser
+      Runtime: nodejs18.x
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref UsersTable
+      Environment:
+        Variables:
+          DB_TABLE: !Ref UsersTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{id}
+            Method: GET
