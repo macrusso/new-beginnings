@@ -8,12 +8,23 @@ interface Response {
 }
 
 export const addUser = async (event: APIGatewayProxyEvent): Promise<Response> => {
-  const body = JSON.parse(event.body || "{}") as User;
+  try {
+    if (event.httpMethod !== "POST") {
+      throw new Error(`Only accepts POST method, you tried: ${event.httpMethod} method.`);
+    }
 
-  const result = await userService.add(body);
+    const body = JSON.parse(event.body || "{}") as User;
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(result),
-  };
+    const result = await userService.add(body);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result),
+    };
+  } catch (error: any) {
+    return {
+      statusCode: 500,
+      body: error.message,
+    };
+  }
 };
