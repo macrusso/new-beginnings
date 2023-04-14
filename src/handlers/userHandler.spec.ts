@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { addUser, updateUser } from "./userHandler";
+import { addUser, updateUser, removeUser } from "./userHandler";
 import { User, UserUpdate } from "../models/types";
 import * as userService from "../services/userService";
 
